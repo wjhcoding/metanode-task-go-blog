@@ -1,0 +1,20 @@
+# 应用基本信息
+AppName = "MetaNode Go Blog"
+
+# MySQL 数据库配置
+[MySQL]
+Host = "127.0.0.1"
+Port = 3306
+User = "root"
+Password = "jun123456"
+Name = "metanode_blog"
+TablePrefix = ""
+
+# 日志配置
+[Log]
+Path = "./logs"
+Level = "info"
+
+# 静态文件路径
+[StaticPath]
+FilePath = "./static"
