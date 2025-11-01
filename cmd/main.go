@@ -3,6 +3,10 @@ package main
 import (
 	"net/http"
 	"time"
+
+	"github.com/wjhcoding/metanode-task-go-blog/config"
+	"github.com/wjhcoding/metanode-task-go-blog/internal/router"
+	"github.com/wjhcoding/metanode-task-go-blog/pkg/global/log"
 )
 
 func main() {
@@ -12,8 +16,6 @@ func main() {
 	log.Logger.Info("start server", log.String("start", "start web sever..."))
 
 	newRouter := router.NewRouter()
-
-	go server.MyServer.Start()
 
 	s := &http.Server{
 		Addr:           ":8888",
