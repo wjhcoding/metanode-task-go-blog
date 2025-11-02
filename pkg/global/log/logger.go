@@ -2,6 +2,7 @@ package log
 
 import (
 	"os"
+	"path/filepath"
 
 	"github.com/natefinch/lumberjack"
 	"go.uber.org/zap"
@@ -18,12 +19,24 @@ var (
 	Float32 = zap.Float32
 )
 
-// logpath 日志文件路径
-// loglevel 日志级别
-func InitLogger(logpath string, loglevel string) {
+// InitLogger 初始化日志
+// logpath: 日志文件目录，例如 "./logs"
+// loglevel: 日志级别，例如 "info"
+func InitLogger(appName string, logpath string, loglevel string) {
+	// 如果目录不存在则创建
+	if _, err := os.Stat(logpath); os.IsNotExist(err) {
+		_ = os.MkdirAll(logpath, os.ModePerm)
+	}
+
+	logFile := logpath
+	fi, err := os.Stat(logpath)
+	if err == nil && fi.IsDir() {
+		logFile = filepath.Join(logpath, "app.log")
+	}
+
 	// 日志分割
 	hook := lumberjack.Logger{
-		Filename:   logpath, // 日志文件路径，默认 os.TempDir()
+		Filename:   logFile, // 日志文件路径，默认 os.TempDir()
 		MaxSize:    100,     // 每个日志文件保存100M，默认 100M
 		MaxBackups: 30,      // 保留30个备份，默认不限
 		MaxAge:     7,       // 保留7天，默认不限
@@ -83,8 +96,10 @@ func InitLogger(logpath string, loglevel string) {
 	// 开启文件及行号
 	development := zap.Development()
 	// 设置初始化字段,如：添加一个服务器名称
-	filed := zap.Fields(zap.String("application", "chat-room"))
+	filed := zap.Fields(zap.String("application", appName))
 	// 构造日志
 	Logger = zap.New(core, caller, development, filed)
-	Logger.Info("Logger init success")
+	Logger.Info("Logger init success",
+		zap.String("application", appName),
+		zap.String("path", logFile))
 }

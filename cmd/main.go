@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	log.InitLogger(config.GetConfig().Log.Path, config.GetConfig().Log.Level)
+	log.InitLogger(config.GetConfig().AppName, config.GetConfig().Log.Path, config.GetConfig().Log.Level)
 	log.Logger.Info("config", log.Any("config", config.GetConfig()))
 
 	log.Logger.Info("start server", log.String("start", "start web sever..."))
